@@ -6,7 +6,6 @@
 """
 import abc
 import functools
-import random
 from typing import Optional
 
 from fsspec.implementations.local import LocalFileSystem
@@ -22,6 +21,7 @@ from tml.machines import environment as env
 import tml.reader.utils as reader_utils
 from tml.common.filesystem import infer_fs
 from tml.ml_logging.torch_logging import logging
+import secrets
 
 
 class _Reader(pa.flight.FlightServerBase):
@@ -75,7 +75,7 @@ class Dataset(torch.utils.data.IterableDataset):
 
   def _create_dataset(self):
     return pads.dataset(
-      source=random.sample(self._files, len(self._files))[0],
+      source=secrets.SystemRandom().sample(self._files, len(self._files))[0],
       format="parquet",
       filesystem=self._fs,
       exclude_invalid_files=False,
